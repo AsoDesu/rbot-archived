@@ -35,7 +35,7 @@ function addReaction(d: any, client: Discord.Client) {
 
             try {
                 user.roles.add(guild.roles.cache.get(role))
-                user.setNickname(`${data.prefix} ${user.user.username}`)
+                //user.setNickname(`${data.prefix} ${user.user.username}`)
             } catch { }
         })
     })

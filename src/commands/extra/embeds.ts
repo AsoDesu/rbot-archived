@@ -32,7 +32,7 @@ export default {
     }),
     prefix: new MessageEmbed({
         "title": "What prefix would you like to assign to the user",
-        "description": "This is the nickname prefix that will be given to the user \n e.g. [GG] \n [GG] -> [GG] Aso",
+        "description": "This is the nickname prefix that will be given to the user \n e.g. [GG] \n [GG] -> [GG] Aso \n NICKNAMES ARE CURRENLY DISABLED!",
         "color": 65420,
         "footer": {
             "text": "Step 5 - 5"
