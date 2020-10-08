@@ -38,7 +38,7 @@ function addReaction(d, client) {
                 user.roles.add(guild.roles.cache.get(role));
                 user.setNickname(`${data.prefix} ${user.user.username}`);
             }
-            catch (_a) { }
+            catch { }
         });
     });
 }

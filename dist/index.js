@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -20,7 +11,7 @@ const reactRemove_1 = __importDefault(require("./reactRemove"));
 // Commands
 const createRR_1 = __importDefault(require("./commands/createRR"));
 const removeRR_1 = __importDefault(require("./commands/removeRR"));
-client.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
+client.on('message', async (msg) => {
     if (!msg.content.startsWith(process.env.PREFIX) || msg.author.bot)
         return;
     const args = msg.content.slice(process.env.PREFIX.length).split(/ +/);
@@ -30,31 +21,31 @@ client.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 createRR_1.default(msg, args);
             }
-            catch (_a) { }
+            catch { }
             break;
         case 'removerr':
             try {
                 removeRR_1.default(msg, args);
             }
-            catch (_b) { }
+            catch { }
             break;
         case 'test':
             break;
     }
-}));
+});
 client.on('raw', ({ t, d }) => {
     switch (t) {
         case 'MESSAGE_REACTION_ADD':
             try {
                 reactAdd_1.default(d, client);
             }
-            catch (_a) { }
+            catch { }
             break;
         case 'MESSAGE_REACTION_REMOVE':
             try {
                 reactRemove_1.default(d, client);
             }
-            catch (_b) { }
+            catch { }
             break;
     }
 });
@@ -63,3 +54,9 @@ client.on('ready', () => {
     client.user.setActivity({ type: 'PLAYING', name: 'r!' });
 });
 client.login(process.env.TOKEN);
+const express_1 = __importDefault(require("express"));
+const app = express_1.default();
+app.get('/ping', (req, res) => {
+    res.send('Online');
+});
+app.listen(process.env.PORT);

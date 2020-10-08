@@ -44,3 +44,12 @@ client.on('ready', () => {
 })
 
 client.login(process.env.TOKEN)
+
+import Express from 'express'
+const app = Express()
+
+app.get('/ping', (req, res) => {
+    res.send('Online')
+})
+
+app.listen(process.env.PORT)
