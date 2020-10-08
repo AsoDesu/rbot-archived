@@ -122,7 +122,7 @@ async function command(msg: Discord.Message, args: string[]) {
 
                 // React to the message
 
-                var reactchannel = msg.guild.channels.cache.get('763065143827234896');
+                var reactchannel = msg.guild.channels.cache.get(channel);
                 if (!((reactchannel): reactchannel is Discord.TextChannel => reactchannel.type === 'text')(reactchannel)) return;
 
                 // Get the emote id
@@ -135,7 +135,7 @@ async function command(msg: Discord.Message, args: string[]) {
                 }
                 try {
                     // React to the message
-                    (await reactchannel.messages.fetch()).get('763807224950030416').react(tempemote)
+                    (await reactchannel.messages.fetch()).get(msgId).react(tempemote)
                 } catch (err) {
                     // There was an error
                     msg.channel.send('An error occured :(')
