@@ -52,4 +52,8 @@ app.get('/ping', (req, res) => {
     res.send('Online')
 })
 
+app.get('/', (req, res) => {
+    res.send('hello ;)')
+})
+
 app.listen(process.env.PORT)
