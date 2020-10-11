@@ -56,10 +56,6 @@ client.login(process.env.TOKEN)
 import Express from 'express'
 const app = Express()
 
-app.get('/', (req, res) => {
-    res.send('hello ;)')
-})
-
 app.get('/ping', (req, res) => {
     res.send('Online')
 })
