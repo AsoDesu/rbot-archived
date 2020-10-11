@@ -20,7 +20,11 @@ function addReaction(d: any, client: Discord.Client) {
 
     var emote
     if (d.emoji.id) {
-        emote = `<:${d.emoji.name}:${d.emoji.id}>`
+        if (client.emojis.cache.get(d.emoji.id).animated) {
+            emote = `<a:${d.emoji.name}:${d.emoji.id}>`
+        } else {
+            emote = `<:${d.emoji.name}:${d.emoji.id}>`
+        }
     } else {
         emote = d.emoji.name
     }
