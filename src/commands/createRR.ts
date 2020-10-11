@@ -23,7 +23,6 @@ async function command(msg: Discord.Message, args: string[]) {
     var role: string;
     var channel: string;
     var msgId: string;
-    var prefix: string;
     var emote: string;
 
     var question = await msg.channel.send(embeds.role)
@@ -45,6 +44,7 @@ async function command(msg: Discord.Message, args: string[]) {
         await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
             if (cancel(messages.first())) { return; }
             var tempChnl = getChannelFromMention(messages.first().content)
+            if (!msg.guild.channels.cache.get(tempChnl)) { msg.reply('That channel does not exist in this server'); return }
             if (!tempChnl) { msg.reply('That is not a channel'); return; }
             channel = tempChnl
             messages.first().delete()
@@ -54,9 +54,14 @@ async function command(msg: Discord.Message, args: string[]) {
 
     async function collectId() {
         await question.edit(embeds.msgId)
-        await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
+        await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(async messages => {
             if (cancel(messages.first())) { return; }
             msgId = messages.first().content
+            // Check
+            var checkChannel = msg.guild.channels.cache.get(channel)
+            if (!((checkChannel): checkChannel is Discord.TextChannel => checkChannel.type === 'text')(checkChannel)) return;
+            if (!(await checkChannel.messages.fetch()).get(msgId)) { msg.reply('That message does not exist in this server'); return }
+
             messages.first().delete()
             collectEmote()
         }).catch(() => { noInput(msg); return; })
@@ -67,16 +72,6 @@ async function command(msg: Discord.Message, args: string[]) {
         await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
             if (cancel(messages.first())) { return; }
             emote = messages.first().content
-            messages.first().delete()
-            collectPrefix()
-        }).catch(() => { noInput(msg); return; })
-    }
-
-    async function collectPrefix() {
-        await question.edit(embeds.prefix)
-        await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
-            if (cancel(messages.first())) { return; }
-            prefix = messages.first().content
             messages.first().delete()
             collectOkay()
         }).catch(() => { noInput(msg); return; })
@@ -100,10 +95,6 @@ async function command(msg: Discord.Message, args: string[]) {
                     "value": msgId
                 },
                 {
-                    "name": "Prefix",
-                    "value": `\`${prefix}\``
-                },
-                {
                     "name": "Emote",
                     "value": emote
                 }
@@ -113,8 +104,8 @@ async function command(msg: Discord.Message, args: string[]) {
             newMsg.react('❎')
             var collector = newMsg.createReactionCollector(reactionFilter, { time: 15000 }).on('collect', async (rection: Discord.MessageReaction, user: any) => {
                 if (rection.emoji.name == '❎') {
-                    newMsg.channel.send('Canceling'); 
-                    collector.stop(); 
+                    newMsg.channel.send('Canceling');
+                    collector.stop();
                     return;
                 }
                 newMsg.delete()
@@ -127,12 +118,7 @@ async function command(msg: Discord.Message, args: string[]) {
 
                 // Get the emote id
 
-                var tempemote;
-                if (!emote.includes(':')) {
-                    tempemote = emote
-                } else {
-                    tempemote = emote.split(':')[2].replace('>', '')
-                }
+                var tempemote = getEmote(emote)
                 try {
                     // React to the message
                     (await reactchannel.messages.fetch()).get(msgId).react(tempemote)
@@ -143,7 +129,7 @@ async function command(msg: Discord.Message, args: string[]) {
                 }
 
                 // Save to the database
-                
+
                 saveStuff().then(() => {
                     newnewMsg.edit('Saved.')
                 })
@@ -162,7 +148,6 @@ async function command(msg: Discord.Message, args: string[]) {
             role: role,
             channel: channel,
             msgId: msgId,
-            prefix: prefix,
             emote: emote
         }, { merge: true })
     }
@@ -174,6 +159,16 @@ async function command(msg: Discord.Message, args: string[]) {
         } else {
             return false
         }
+    }
+
+    function getEmote(reqEmote: string) {
+        var tempemote;
+        if (!emote.includes(':')) {
+            tempemote = reqEmote
+        } else {
+            tempemote = reqEmote.split(':')[2].replace('>', '')
+        }
+        return tempemote
     }
 
     //var rrRef = database.collection('react roles').doc()

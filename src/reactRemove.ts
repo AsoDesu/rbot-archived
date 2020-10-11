@@ -25,8 +25,6 @@ function removeReaction(d: any, client: Discord.Client) {
             if (!user.roles.cache.has(role)) return;
 
             user.roles.remove(guild.roles.cache.get(role))
-
-            user.setNickname(user.user.username)
         })
     })
 

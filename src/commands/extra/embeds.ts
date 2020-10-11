@@ -1,10 +1,5 @@
 import { MessageEmbed } from "discord.js"
 
-var channel
-var msgId
-var prefix
-var emote
-
 export default {
     role: new MessageEmbed({
         "title": "What role would you like to use",
@@ -30,14 +25,6 @@ export default {
             "text": "Step 3 - 5"
         }
     }),
-    prefix: new MessageEmbed({
-        "title": "What prefix would you like to assign to the user",
-        "description": "This is the nickname prefix that will be given to the user \n e.g. [GG] \n [GG] -> [GG] Aso \n NICKNAMES ARE CURRENLY DISABLED!",
-        "color": 65420,
-        "footer": {
-            "text": "Step 5 - 5"
-        }
-    }),
     emote: new MessageEmbed({
         "title": "What emote would you like to use",
         "description": "This is the emote the user must react with to get the role \n e.g. 💌",
@@ -45,5 +32,36 @@ export default {
         "footer": {
             "text": "Step 4 - 5"
         }
-    })
+    }),
+    delete: new MessageEmbed({
+        "title": "Are you sure you want to delete this reaction role",
+        "description": "This will remove all reactions to the message \n This action is irreversible",
+        "color": 15415860
+    }),
+    help: new MessageEmbed({
+        "title": "rBot Beta Help",
+        "description": "use r!help [command] for help on a specific command",
+        "color": 4360181,
+        "fields": [
+          {
+            "name": "create",
+            "value": "Creates a new reaction role",
+            "inline": true
+          },
+          {
+            "name": "delete {message id}",
+            "value": "Deletes all reaction roles on a specific message",
+            "inline": true
+          },
+          {
+            "name": "help",
+            "value": "Display's this help menu",
+            "inline": true
+          }
+        ],
+        "footer": {
+          "icon_url": "https://cdn.discordapp.com/avatars/580425653325791272/a_3f2acc778b557be3d58156b5b1262158.png",
+          "text": "rBot created by Aso"
+        }
+      })
 }  

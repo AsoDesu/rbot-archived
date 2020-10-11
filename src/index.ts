@@ -8,6 +8,7 @@ import removeReact from './reactRemove'
 // Commands
 import createRR from './commands/createRR'
 import removeRR from './commands/removeRR'
+import help from './commands/help'
 
 client.on('message', async (msg: Discord.Message) => {
     if (!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
@@ -16,12 +17,15 @@ client.on('message', async (msg: Discord.Message) => {
     const command = args.shift().toLowerCase()
 
     switch (command) {
-        case 'rr':
-            try { createRR(msg, args) } catch {}
+        case 'create':
+            try { createRR(msg, args) } catch { }
             break;
-        case 'removerr':
-            try { removeRR(msg, args) } catch {}
+        case 'delete':
+            try { removeRR(msg, args) } catch { }
             break;
+        case 'help':
+            try { help(msg, args) } catch { }
+            break
         case 'test':
             break;
     }
@@ -30,23 +34,31 @@ client.on('message', async (msg: Discord.Message) => {
 client.on('raw', ({ t, d }) => {
     switch (t) {
         case 'MESSAGE_REACTION_ADD':
-            try { addReact(d, client) } catch {}
+            try { addReact(d, client) } catch { }
             break;
         case 'MESSAGE_REACTION_REMOVE':
-            try { removeReact(d, client) } catch {}
+            try { removeReact(d, client) } catch { }
             break;
     }
 })
 
 client.on('ready', () => {
     console.log('Connected to discord Pog')
-    client.user.setActivity({ type: 'PLAYING', name: 'r!' })
+    client.user.setActivity({ type: 'WATCHING', name: `${client.guilds.cache.size} servers` })
+})
+
+client.on('guildCreate', () => {
+    client.user.setActivity({ type: 'WATCHING', name: `${client.guilds.cache.size} servers` })
 })
 
 client.login(process.env.TOKEN)
 
 import Express from 'express'
 const app = Express()
+
+app.get('/', (req, res) => {
+    res.send('hello ;)')
+})
 
 app.get('/ping', (req, res) => {
     res.send('Online')
