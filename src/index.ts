@@ -9,9 +9,11 @@ import removeReact from './reactRemove'
 import createRR from './commands/createRR'
 import removeRR from './commands/removeRR'
 import help from './commands/help'
+import dev from './commands/dev';
 
 client.on('message', async (msg: Discord.Message) => {
     if (!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
+    if (!msg.guild) { msg.reply('You are not in a server'); return };
 
     const args = msg.content.slice(process.env.PREFIX.length).split(/ +/)
     const command = args.shift().toLowerCase()
@@ -27,6 +29,7 @@ client.on('message', async (msg: Discord.Message) => {
             try { help(msg, args) } catch { }
             break
         case 'test':
+            try { dev(msg, args) } catch { }
             break;
     }
 })
