@@ -11,6 +11,9 @@ import removeRR from './commands/removeRR'
 import help from './commands/help'
 import dev from './commands/dev';
 
+// Extra stuff
+import updateServerList from './updateserverlist'
+
 client.on('message', async (msg: Discord.Message) => {
     if (!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
     if (!msg.guild) { msg.reply('You are not in a server'); return };
@@ -29,7 +32,8 @@ client.on('message', async (msg: Discord.Message) => {
             try { help(msg, args) } catch { }
             break
         case 'test':
-            try { dev(msg, args) } catch { }
+            try { dev.command(msg, args) } catch { }
+            //try { dev.dev(msg, args) } catch { }
             break;
     }
 })
@@ -48,10 +52,12 @@ client.on('raw', ({ t, d }) => {
 client.on('ready', () => {
     console.log('Connected to discord Pog')
     client.user.setActivity({ type: 'WATCHING', name: `${client.guilds.cache.size} servers` })
+    updateServerList(client.guilds.cache.size)
 })
 
 client.on('guildCreate', () => {
     client.user.setActivity({ type: 'WATCHING', name: `${client.guilds.cache.size} servers` })
+    updateServerList(client.guilds.cache.size)
 })
 
 client.login(process.env.TOKEN)

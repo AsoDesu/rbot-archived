@@ -2,6 +2,7 @@ import Discord from 'discord.js'
 import 'dotenv/config'
 
 import firebase from 'firebase'
+import { access } from 'fs'
 import embeds from './extra/embeds'
 
 var database = firebase.firestore()
@@ -71,6 +72,10 @@ async function command(msg: Discord.Message, args: string[]) {
         await question.edit(embeds.emote)
         await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
             if (cancel(messages.first())) { return; }
+            if (!msg.client.emojis.cache.get(getEmote(messages.first().content))) {
+                msg.channel.send('I don\'t have access to that emote. Please try again')
+                return;
+            }
             emote = messages.first().content
             messages.first().delete()
             collectOkay()
@@ -163,7 +168,7 @@ async function command(msg: Discord.Message, args: string[]) {
 
     function getEmote(reqEmote: string) {
         var tempemote;
-        if (!emote.includes(':')) {
+        if (!reqEmote.includes(':')) {
             tempemote = reqEmote
         } else {
             tempemote = reqEmote.split(':')[2].replace('>', '')

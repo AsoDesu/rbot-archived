@@ -20,4 +20,8 @@ async function command(msg: Message, args: string[]) {
     msg.channel.send(`${doc.data().testmessage}\n${betaMsg}`)
 }
 
-export default command
+async function dev(msg: Message, args: string[]) {
+    msg.channel.send(msg.guild.id)
+}
+
+export default { command: command, dev: dev }
