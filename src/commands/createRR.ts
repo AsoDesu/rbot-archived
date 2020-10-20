@@ -72,7 +72,7 @@ async function command(msg: Discord.Message, args: string[]) {
         await question.edit(embeds.emote)
         await msg.channel.awaitMessages(filter, { time: 60000, max: 1, errors: ['time'] }).then(messages => {
             if (cancel(messages.first())) { return; }
-            if (!msg.client.emojis.cache.get(getEmote(messages.first().content))) {
+            if (!msg.client.emojis.cache.get(getEmote(messages.first().content)) && messages.first().content.includes('<')) {
                 msg.channel.send('I don\'t have access to that emote. Please try again')
                 return;
             }
